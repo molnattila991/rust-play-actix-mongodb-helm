@@ -1,3 +1,6 @@
+use dotenv::dotenv;
+use std::env;
+
 use actix_web::{
     get, post,
     web::{self, Data},
@@ -18,8 +21,8 @@ pub struct MongoRepo {
 impl MongoRepo {
     pub async fn init() -> Self {
         let client_uri =
-        "mongodb+srv://datengo:datengo@cluster0.hdqe2nu.mongodb.net/?retryWrites=true&w=majority";
-        //env::var("MONGODB_URI").expect("You must set the MONGODB_URI environment var!");
+        //"mongodb://adminuser:password123@localhost:27017/?retryWrites=true&w=majority";
+        env::var("MONGODB_URI").expect("You must set the MONGODB_URI environment var!");
         let options =
             ClientOptions::parse_with_resolver_config(&client_uri, ResolverConfig::cloudflare())
                 .await;
@@ -38,7 +41,7 @@ impl MongoRepo {
             .col
             .find(
                 doc! {
-                    "loc": {
+                    "location": {
                         "$near": {
                             "$geometry": {
                                 "type": "Point",
@@ -92,6 +95,14 @@ async fn current_temperature(db: Data<MongoRepo>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+ 
+    let host = env::var("APP_HOST").expect("You must set the APP_HOST environment var!");
+    let port = env::var("APP_PORT").expect("You must set the APP_PORT environment var!");
+
+    println!("{} {}", host, port);
+    println!("{}", env::var("MONGODB_URI").expect(""));
+
     let db = MongoRepo::init().await;
     let db_data = Data::new(db);
 
@@ -103,7 +114,7 @@ async fn main() -> std::io::Result<()> {
             .service(current_temperature)
             .route("/hey", web::get().to(manual_hello))
     })
-    .bind(("0.0.0.0", 8080))?
+    .bind((host, port.parse::<u16>().unwrap()))?
     .run()
     .await
 }

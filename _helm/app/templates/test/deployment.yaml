@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app-1
+  labels:
+    app: test-app-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-1
+  template:
+    metadata:
+      labels:
+        app: test-app-1
+    spec:
+      containers:
+      - name: test-app-1
+        image: test-app-1:v1.0.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://adminuser:password123@mongo-nodeport-svc:27017/?retryWrites=true&w=majority"
+        - name: APP_HOST
+          value: "0.0.0.0"
+        - name: APP_PORT
+          value: "8080"

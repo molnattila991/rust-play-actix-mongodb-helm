@@ -1,0 +1,7 @@
+- docker build -t test-app-1:v1.0.0 .
+- cd ./_helm
+- helm package infra
+- helm package app
+- helm install infra ./infra-x.x.x.tgz
+- helm install app ./app-x.x.x.tgz
+- test with manual_test.http
