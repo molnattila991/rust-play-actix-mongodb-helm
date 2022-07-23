@@ -4,7 +4,7 @@
 GET http://localhost:8080/hey HTTP/1.1
 
 ### Echo
-POST http://localhost:8080/echo HTTP/1.1
+POST http://localhost:8080/coordinate HTTP/1.1
 content-type: application/json
 
 {
@@ -16,3 +16,6 @@ content-type: application/json
 
 ###
 GET http://localhost:8080/temp HTTP/1.1
+
+###
+POST http://localhost:8080/coordinate HTTP/1.1

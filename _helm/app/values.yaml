@@ -6,5 +6,5 @@ components:
   test:
     deploy: "true"
     image:
-      name: "app-be-api-gateway"
-      version: "v1.0.3"
+      name: "test-app-1"
+      version: "v1.0.0"
